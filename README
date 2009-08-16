@@ -1,0 +1,41 @@
+/*
+ * README
+ * mysql-cipher-functions - MySQL cipher UDFs
+ */
+
+====================================================================
+* Introduction
+====================================================================
+
+MySQL cipher UDFs
+
+* MySQL UDF
+http://dev.mysql.com/doc/refman/5.1/en/plugin-api.html
+
+====================================================================
+* Build and Install
+====================================================================
+
+
+1) extract files from an archive
+tar zxvf mysql-cipher-functions-VERSION.tar.gz
+cd mysql-cipher-functions-VERSION
+
+2) configure, make, amd make install
+./configure  --with-mysql-config=<mysql_config command path>
+make
+sudo make install
+
+ex.
+./configure --with-mysql-config=/usr/local/mysql/bin/mysql_config
+
+3) login to mysql, and install functions
+mysql -uroot -p
+mysql> CREATE FUNCTION <function_name> RETURNS STRING SONAME "cipher_functions.so";
+
+[create all functions]
+cat mysql-cipher-functions-VERSION/sql/create_functions.sql | mysql -uroot -p
+
+[drop all functions]
+cat mysql-cipher-functions-VERSION/sql/drop_functions.sql | mysql -uroot -p
+

@@ -1,0 +1,16 @@
+
+* 2009/8/16
+ - 3des error handling on key length
+ - cipher functions to implement
+   my_cast5_encrypt
+   my_cast5_decrypt
+   my_twofish_encrypt
+   my_twofish_decrypt
+   my_twofish128_encrypt
+   my_twofish128_decrypt
+   my_camellia128_encrypt
+   my_camellia128_decrypt
+   my_camellia192_encrypt
+   my_camellia192_decrypt
+   my_camellia256_encrypt
+   my_camellia256_decrypt
