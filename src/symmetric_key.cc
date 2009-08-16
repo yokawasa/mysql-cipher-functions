@@ -283,7 +283,7 @@ SymmetricKey::
     return 0;
 }
 
-}; /* namespace mycrypt */
+}; /* namespace cipher */
 
 /*
  * Local variables:

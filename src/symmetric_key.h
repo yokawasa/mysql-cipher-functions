@@ -42,7 +42,7 @@ class SymmetricKey
     std::auto_ptr<SymmetricKeyPrivate> dp;
 };
 
-}; /* namespace mycrypt */
+}; /* namespace cipher */
 
 #endif /* _MYSQL_CIPHER_FUNCTIONS_SYMMETRIC_KEY_H_ */
 
