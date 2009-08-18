@@ -8,4 +8,15 @@ DROP FUNCTION my_aes192_encrypt;
 DROP FUNCTION my_aes192_decrypt;
 DROP FUNCTION my_aes256_encrypt;
 DROP FUNCTION my_aes256_decrypt;
-
+DROP FUNCTION my_cast5_encrypt;
+DROP FUNCTION my_cast5_decrypt;
+DROP FUNCTION my_twofish_encrypt;
+DROP FUNCTION my_twofish_decrypt;
+DROP FUNCTION my_twofish128_encrypt;
+DROP FUNCTION my_twofish128_decrypt;
+DROP FUNCTION my_camellia128_encrypt;
+DROP FUNCTION my_camellia128_decrypt;
+DROP FUNCTION my_camellia192_encrypt;
+DROP FUNCTION my_camellia192_decrypt;
+DROP FUNCTION my_camellia256_encrypt;
+DROP FUNCTION my_camellia256_decrypt;

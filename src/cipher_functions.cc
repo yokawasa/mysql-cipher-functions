@@ -16,59 +16,88 @@
 */
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 #include <mysql.h>
 #include <gcrypt.h>
 #include "symmetric_key.h"
 
 extern "C" {
-
-/*------------------------------------------------------------------*/
-/* cipher: DES                                                      */
-/*------------------------------------------------------------------*/
+// cipher: DES
 my_bool my_des_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_des_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_des_encrypt_deinit(UDF_INIT *initid);
 my_bool my_des_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_des_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_des_decrypt_deinit(UDF_INIT *initid);
-/*------------------------------------------------------------------*/
-/* cipher: 3DES                                                     */
-/*------------------------------------------------------------------*/
+// cipher: 3DES
 my_bool my_3des_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_3des_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_3des_encrypt_deinit(UDF_INIT *initid);
 my_bool my_3des_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_3des_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_3des_decrypt_deinit(UDF_INIT *initid);
-/*------------------------------------------------------------------*/
-/* cipher: AES                                                      */
-/*------------------------------------------------------------------*/
+// cipher: AES
 my_bool my_aes_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_aes_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_aes_encrypt_deinit(UDF_INIT *initid);
 my_bool my_aes_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_aes_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_aes_decrypt_deinit(UDF_INIT *initid);
-/*------------------------------------------------------------------*/
-/* cipher: AES192                                                   */
-/*------------------------------------------------------------------*/
+// cipher: AES192
 my_bool my_aes192_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_aes192_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_aes192_encrypt_deinit(UDF_INIT *initid);
 my_bool my_aes192_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_aes192_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_aes192_decrypt_deinit(UDF_INIT *initid);
-/*------------------------------------------------------------------*/
-/* cipher: AES256                                                   */
-/*------------------------------------------------------------------*/
+// cipher: AES256
 my_bool my_aes256_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_aes256_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_aes256_encrypt_deinit(UDF_INIT *initid);
 my_bool my_aes256_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_aes256_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_aes256_decrypt_deinit(UDF_INIT *initid);
-
+// cipher: CAST5
+my_bool my_cast5_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_cast5_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_cast5_encrypt_deinit(UDF_INIT *initid);
+my_bool my_cast5_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_cast5_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_cast5_decrypt_deinit(UDF_INIT *initid);
+// cipher: TWOFISH
+my_bool my_twofish_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_twofish_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_twofish_encrypt_deinit(UDF_INIT *initid);
+my_bool my_twofish_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_twofish_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_twofish_decrypt_deinit(UDF_INIT *initid);
+// cipher: TWOFIS128
+my_bool my_twofish128_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_twofish128_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_twofish128_encrypt_deinit(UDF_INIT *initid);
+my_bool my_twofish128_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_twofish128_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_twofish128_decrypt_deinit(UDF_INIT *initid);
+// cipher: CAMELLIA128
+my_bool my_camellia128_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_camellia128_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_camellia128_encrypt_deinit(UDF_INIT *initid);
+my_bool my_camellia128_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_camellia128_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_camellia128_decrypt_deinit(UDF_INIT *initid);
+// cipher: CAMELLIA192
+my_bool my_camellia192_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_camellia192_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_camellia192_encrypt_deinit(UDF_INIT *initid);
+my_bool my_camellia192_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_camellia192_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_camellia192_decrypt_deinit(UDF_INIT *initid);
+// cipher: CAMELLIA256
+my_bool my_camellia256_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_camellia256_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_camellia256_encrypt_deinit(UDF_INIT *initid);
+my_bool my_camellia256_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_camellia256_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_camellia256_decrypt_deinit(UDF_INIT *initid);
 };
 
 int
@@ -77,15 +106,15 @@ int
     if (str == 0 || *str == 0)
         return GCRY_CIPHER_MODE_CBC;
 
-    if ( strcmp(str, "ecb")!=0)
+    if ( strcmp(str, "ecb")==0)
        return GCRY_CIPHER_MODE_ECB;
-    else if(strcmp(str, "cbc")!=0)
+    else if(strcmp(str, "cbc")==0)
         return GCRY_CIPHER_MODE_CBC;
-    else if(strcmp(str, "cfb")!=0)
+    else if(strcmp(str, "cfb")==0)
         return GCRY_CIPHER_MODE_CFB;
-    else if(strcmp(str, "ofb")!=0)
+    else if(strcmp(str, "ofb")==0)
         return GCRY_CIPHER_MODE_OFB;
-    else if(strcmp(str, "ctr")!=0)
+    else if(strcmp(str, "ctr")==0)
         return GCRY_CIPHER_MODE_CTR;
 
     return GCRY_CIPHER_MODE_CBC;
@@ -113,8 +142,8 @@ my_bool symmetric_key_init_common(const char* func, UDF_INIT *initid, UDF_ARGS *
           && strcmp(args->args[2], "ctr")!=0
         ) {
             snprintf(message, MYSQL_ERRMSG_SIZE,
-                "Invalid argument %s(): 3rd arg(mode, optional, default cbc) "
-                "must be ecb, cbc, cfb, ofb, or ctr", func);
+                "Invalid argument %s(): 3rd arg(optional) is block mode : "
+                "ecb|cbc|cfb|ofb|ctr and default cbc.", func);
             return 1;
         }
     }
@@ -394,6 +423,174 @@ char* my_aes256_decrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigne
     return symmetric_key_decrypt_common(GCRY_CIPHER_AES256, initid, args, result, length, is_null, error);
 }
 void my_aes256_decrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* cipher: CAST5                                                    */
+/*------------------------------------------------------------------*/
+my_bool my_cast5_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_cast5_encrypt", initid, args, message);
+}
+char* my_cast5_encrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_encrypt_common(GCRY_CIPHER_CAST5, initid, args, result, length, is_null, error);
+}
+void my_cast5_encrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+my_bool my_cast5_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_cast5_decrypt", initid, args, message);
+}
+char* my_cast5_decrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_decrypt_common(GCRY_CIPHER_CAST5, initid, args, result, length, is_null, error);
+}
+void my_cast5_decrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* cipher: TWOFISH                                                  */
+/*------------------------------------------------------------------*/
+my_bool my_twofish_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_twofish_encrypt", initid, args, message);
+}
+char* my_twofish_encrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_encrypt_common(GCRY_CIPHER_TWOFISH, initid, args, result, length, is_null, error);
+}
+void my_twofish_encrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+my_bool my_twofish_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_twofish_decrypt", initid, args, message);
+}
+char* my_twofish_decrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_decrypt_common(GCRY_CIPHER_TWOFISH, initid, args, result, length, is_null, error);
+}
+void my_twofish_decrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* cipher: TWOFISH128                                               */
+/*------------------------------------------------------------------*/
+my_bool my_twofish128_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_twofish128_encrypt", initid, args, message);
+}
+char* my_twofish128_encrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_encrypt_common(GCRY_CIPHER_TWOFISH128, initid, args, result, length, is_null, error);
+}
+void my_twofish128_encrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+my_bool my_twofish128_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_twofish128_decrypt", initid, args, message);
+}
+char* my_twofish128_decrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_decrypt_common(GCRY_CIPHER_TWOFISH128, initid, args, result, length, is_null, error);
+}
+void my_twofish128_decrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* cipher: CAMELLIA128                                              */
+/*------------------------------------------------------------------*/
+my_bool my_camellia128_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_camellia128_encrypt", initid, args, message);
+}
+char* my_camellia128_encrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_encrypt_common(GCRY_CIPHER_CAMELLIA128, initid, args, result, length, is_null, error);
+}
+void my_camellia128_encrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+my_bool my_camellia128_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_camellia128_decrypt", initid, args, message);
+}
+char* my_camellia128_decrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_decrypt_common(GCRY_CIPHER_CAMELLIA128, initid, args, result, length, is_null, error);
+}
+void my_camellia128_decrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* cipher: CAMELLIA192                                              */
+/*------------------------------------------------------------------*/
+my_bool my_camellia192_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_camellia192_encrypt", initid, args, message);
+}
+char* my_camellia192_encrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_encrypt_common(GCRY_CIPHER_CAMELLIA192, initid, args, result, length, is_null, error);
+}
+void my_camellia192_encrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+my_bool my_camellia192_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_camellia192_decrypt", initid, args, message);
+}
+char* my_camellia192_decrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_decrypt_common(GCRY_CIPHER_CAMELLIA192, initid, args, result, length, is_null, error);
+}
+void my_camellia192_decrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* cipher: CAMELLIA256                                              */
+/*------------------------------------------------------------------*/
+my_bool my_camellia256_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_camellia256_encrypt", initid, args, message);
+}
+char* my_camellia256_encrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_encrypt_common(GCRY_CIPHER_CAMELLIA256, initid, args, result, length, is_null, error);
+}
+void my_camellia256_encrypt_deinit(UDF_INIT *initid)
+{
+    symmetric_key_deinit_common(initid);
+}
+my_bool my_camellia256_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return symmetric_key_init_common("my_camellia256_decrypt", initid, args, message);
+}
+char* my_camellia256_decrypt(UDF_INIT *initid , UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return symmetric_key_decrypt_common(GCRY_CIPHER_CAMELLIA256, initid, args, result, length, is_null, error);
+}
+void my_camellia256_decrypt_deinit(UDF_INIT *initid)
 {
     symmetric_key_deinit_common(initid);
 }

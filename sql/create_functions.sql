@@ -8,4 +8,15 @@ CREATE FUNCTION my_aes192_encrypt RETURNS STRING SONAME "cipher_functions.so";
 CREATE FUNCTION my_aes192_decrypt RETURNS STRING SONAME "cipher_functions.so";
 CREATE FUNCTION my_aes256_encrypt RETURNS STRING SONAME "cipher_functions.so";
 CREATE FUNCTION my_aes256_decrypt RETURNS STRING SONAME "cipher_functions.so";
-
+CREATE FUNCTION my_cast5_encrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_cast5_decrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_twofish_encrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_twofish_decrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_twofish128_encrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_twofish128_decrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_camellia128_encrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_camellia128_decrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_camellia192_encrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_camellia192_decrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_camellia256_encrypt RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_camellia256_decrypt RETURNS STRING SONAME "cipher_functions.so";

@@ -236,6 +236,11 @@ SymmetricKey::
         && algo != GCRY_CIPHER_DES
         && algo != GCRY_CIPHER_3DES
         && algo != GCRY_CIPHER_CAST5
+        && algo != GCRY_CIPHER_TWOFISH
+        && algo != GCRY_CIPHER_TWOFISH128
+        && algo != GCRY_CIPHER_CAMELLIA128
+        && algo != GCRY_CIPHER_CAMELLIA192
+        && algo != GCRY_CIPHER_CAMELLIA256
     ) {
         fprintf(stderr, "invalid algo\n");
         return 1;
