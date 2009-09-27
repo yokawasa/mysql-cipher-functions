@@ -1,3 +1,16 @@
+CREATE FUNCTION my_md4 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_md5 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_sha1 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_sha224 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_sha256 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_sha384 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_sha512 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_rmd160 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_tiger RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_whirlpool RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_crc32 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_crc32_rfc1510 RETURNS STRING SONAME "cipher_functions.so";
+CREATE FUNCTION my_crc24_rfc2440 RETURNS STRING SONAME "cipher_functions.so";
 CREATE FUNCTION my_des_encrypt RETURNS STRING SONAME "cipher_functions.so";
 CREATE FUNCTION my_des_decrypt RETURNS STRING SONAME "cipher_functions.so";
 CREATE FUNCTION my_3des_encrypt RETURNS STRING SONAME "cipher_functions.so";
