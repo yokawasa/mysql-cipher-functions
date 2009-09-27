@@ -19,8 +19,62 @@
 #include <mysql.h>
 #include <gcrypt.h>
 #include "symmetric_key.h"
+#include "message_digest.h"
 
 extern "C" {
+// md: MD4
+my_bool my_md4_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_md4(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_md4_deinit(UDF_INIT *initid);
+// md: MD5
+my_bool my_md5_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_md5(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_md5_deinit(UDF_INIT *initid);
+// md: SHA1
+my_bool my_sha1_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_sha1(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_sha1_deinit(UDF_INIT *initid);
+// md: SHA224
+my_bool my_sha224_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_sha224(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_sha224_deinit(UDF_INIT *initid);
+// md: SHA256
+my_bool my_sha256_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_sha256(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_sha256_deinit(UDF_INIT *initid);
+// md: SHA384
+my_bool my_sha384_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_sha384(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_sha384_deinit(UDF_INIT *initid);
+// md: SHA512
+my_bool my_sha512_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_sha512(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_sha512_deinit(UDF_INIT *initid);
+// md: RMD160
+my_bool my_rmd160_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_rmd160(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_rmd160_deinit(UDF_INIT *initid);
+// md: TIGER
+my_bool my_tiger_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_tiger(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_tiger_deinit(UDF_INIT *initid);
+// md: WHIRLPOOL
+my_bool my_whirlpool_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_whirlpool(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_whirlpool_deinit(UDF_INIT *initid);
+// md: CRC32
+my_bool my_crc32_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_crc32(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_crc32_deinit(UDF_INIT *initid);
+// md: CRC32_RFC1510
+my_bool my_crc32_rfc1510_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_crc32_rfc1510(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_crc32_rfc1510_deinit(UDF_INIT *initid);
+// md: CRC24_RFC2440
+my_bool my_crc24_rfc2440_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
+char *my_crc24_rfc2440(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
+void my_crc24_rfc2440_deinit(UDF_INIT *initid);
+
 // cipher: DES
 my_bool my_des_encrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *message);
 char *my_des_encrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
@@ -99,6 +153,54 @@ my_bool my_camellia256_decrypt_init(UDF_INIT *initid, UDF_ARGS *args, char *mess
 char *my_camellia256_decrypt(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error);
 void my_camellia256_decrypt_deinit(UDF_INIT *initid);
 };
+
+my_bool message_digest_init_common( int algo, const char* func,
+                    UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    size_t buflen;
+    char *buffer;
+    if ( args->arg_count != 1 ) {
+        snprintf(message, MYSQL_ERRMSG_SIZE,
+            "Invalid argument: %s(<str>).", func);
+        return 1;
+    }
+    args->arg_type[0]=STRING_RESULT;
+    initid->maybe_null = 0;
+    initid->const_item = 0;
+    buflen = cipher::getMessageDigestChecksumBuflen(algo);
+    buffer = (char*)malloc(buflen);
+    initid->max_length= buflen;
+    initid->ptr= buffer;
+    return 0;
+}
+
+char* message_digest_common( int algo,
+            UDF_INIT *initid , UDF_ARGS *args,
+             __attribute__ ((unused)) char *result,
+            unsigned long *length,
+            __attribute__ ((unused)) char *is_null,
+            __attribute__ ((unused)) char *error )
+{
+    char *buffer, *str;
+    int mode;
+    size_t buflen;
+    str  = args->args[0];
+    buffer = (char *)initid->ptr;
+    buflen = initid->max_length;
+    if ( cipher::getMessageDigestChecksum(str, strlen(str), algo, buffer, &buflen) !=0 ) {
+        *error = 1; *is_null = 1;
+        return NULL;
+    }
+    *length= buflen;
+    return buffer;
+}
+
+void message_digest_deinit_common(UDF_INIT *initid) {
+    char *buffer = (char *)initid->ptr;
+    if (buffer) {
+        free(buffer);
+    }
+}
 
 int
  get_cipher_mode(const char* str )
@@ -285,6 +387,215 @@ void symmetric_key_deinit_common(UDF_INIT *initid) {
     if (buffer) {
         free(buffer);
     }
+}
+
+
+/*------------------------------------------------------------------*/
+/* md: MD4                                                          */
+/*------------------------------------------------------------------*/
+my_bool my_md4_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_MD4, "my_md4", initid, args, message);
+}
+char *my_md4(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_MD4, initid, args, result, length, is_null, error);
+}
+void my_md4_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: MD5                                                          */
+/*------------------------------------------------------------------*/
+my_bool my_md5_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_MD5, "my_md5", initid, args, message);
+}
+char *my_md5(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_MD5, initid, args, result, length, is_null, error);
+}
+void my_md5_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: SHA1                                                         */
+/*------------------------------------------------------------------*/
+my_bool my_sha1_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_SHA1, "my_sha1", initid, args, message);
+}
+char *my_sha1(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_SHA1, initid, args, result, length, is_null, error);
+}
+void my_sha1_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: SHA224                                                       */
+/*------------------------------------------------------------------*/
+my_bool my_sha224_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_SHA224, "my_sha224", initid, args, message);
+}
+char *my_sha224(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_SHA224, initid, args, result, length, is_null, error);
+}
+void my_sha224_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: SHA256                                                       */
+/*------------------------------------------------------------------*/
+my_bool my_sha256_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_SHA256, "my_sha256", initid, args, message);
+}
+char *my_sha256(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_SHA256, initid, args, result, length, is_null, error);
+}
+void my_sha256_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: SHA384                                                       */
+/*------------------------------------------------------------------*/
+my_bool my_sha384_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_SHA384, "my_sha384", initid, args, message);
+}
+char *my_sha384(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_SHA384, initid, args, result, length, is_null, error);
+}
+void my_sha384_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: SHA512                                                       */
+/*------------------------------------------------------------------*/
+my_bool my_sha512_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_SHA512, "my_sha512", initid, args, message);
+}
+char *my_sha512(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_SHA512, initid, args, result, length, is_null, error);
+}
+void my_sha512_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: RMD160                                                       */
+/*------------------------------------------------------------------*/
+my_bool my_rmd160_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_RMD160, "my_rmd160", initid, args, message);
+}
+char *my_rmd160(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_RMD160, initid, args, result, length, is_null, error);
+}
+void my_rmd160_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: TIGER                                                        */
+/*------------------------------------------------------------------*/
+my_bool my_tiger_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_TIGER, "my_tiger", initid, args, message);
+}
+char *my_tiger(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_TIGER, initid, args, result, length, is_null, error);
+}
+void my_tiger_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: WHIRLPOOL                                                    */
+/*------------------------------------------------------------------*/
+my_bool my_whirlpool_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_WHIRLPOOL, "my_whirlpool", initid, args, message);
+}
+char *my_whirlpool(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_WHIRLPOOL, initid, args, result, length, is_null, error);
+}
+void my_whirlpool_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: CRC32                                                        */
+/*------------------------------------------------------------------*/
+my_bool my_crc32_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_CRC32, "my_crc32", initid, args, message);
+}
+char *my_crc32(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_CRC32, initid, args, result, length, is_null, error);
+}
+void my_crc32_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: CRC32_RFC1510                                                */
+/*------------------------------------------------------------------*/
+my_bool my_crc32_rfc1510_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_CRC32_RFC1510, "my_crc32_rfc1510", initid, args, message);
+}
+char *my_crc32_rfc1510(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_CRC32_RFC1510, initid, args, result, length, is_null, error);
+}
+void my_crc32_rfc1510_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
+}
+
+/*------------------------------------------------------------------*/
+/* md: CRC24_RFC2440                                                */
+/*------------------------------------------------------------------*/
+my_bool my_crc24_rfc2440_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
+{
+    return message_digest_init_common(GCRY_MD_CRC24_RFC2440, "my_crc24_rfc2440", initid, args, message);
+}
+char *my_crc24_rfc2440(UDF_INIT *initid, UDF_ARGS *args, char *result, unsigned long *length, char *is_null, char *error)
+{
+    return message_digest_common(GCRY_MD_CRC24_RFC2440, initid, args, result, length, is_null, error);
+}
+void my_crc24_rfc2440_deinit(UDF_INIT *initid)
+{
+    message_digest_deinit_common(initid);
 }
 
 /*------------------------------------------------------------------*/

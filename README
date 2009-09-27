@@ -39,3 +39,49 @@ cat mysql-cipher-functions-VERSION/sql/create_functions.sql | mysql -uroot -p
 [drop all functions]
 cat mysql-cipher-functions-VERSION/sql/drop_functions.sql | mysql -uroot -p
 
+
+4) check funcs' installation
+
+mysql> select * from mysql.func;
++------------------------+-----+---------------------+----------+
+| name                   | ret | dl                  | type     |
++------------------------+-----+---------------------+----------+
+| my_aes_decrypt         |   0 | cipher_functions.so | function |
+| my_aes192_encrypt      |   0 | cipher_functions.so | function |
+| my_aes192_decrypt      |   0 | cipher_functions.so | function |
+| my_aes256_encrypt      |   0 | cipher_functions.so | function |
+| my_twofish128_decrypt  |   0 | cipher_functions.so | function |
+| my_camellia128_encrypt |   0 | cipher_functions.so | function |
+| my_des_decrypt         |   0 | cipher_functions.so | function |
+| my_3des_encrypt        |   0 | cipher_functions.so | function |
+| my_3des_decrypt        |   0 | cipher_functions.so | function |
+| my_aes_encrypt         |   0 | cipher_functions.so | function |
+| my_crc24_rfc2440       |   0 | cipher_functions.so | function |
+| my_des_encrypt         |   0 | cipher_functions.so | function |
+| my_crc32_rfc1510       |   0 | cipher_functions.so | function |
+| my_crc32               |   0 | cipher_functions.so | function |
+| my_whirlpool           |   0 | cipher_functions.so | function |
+| my_tiger               |   0 | cipher_functions.so | function |
+| my_rmd160              |   0 | cipher_functions.so | function |
+| my_sha512              |   0 | cipher_functions.so | function |
+| my_sha384              |   0 | cipher_functions.so | function |
+| my_sha256              |   0 | cipher_functions.so | function |
+| my_sha224              |   0 | cipher_functions.so | function |
+| my_sha1                |   0 | cipher_functions.so | function |
+| my_md5                 |   0 | cipher_functions.so | function |
+| my_md4                 |   0 | cipher_functions.so | function |
+| my_camellia128_decrypt |   0 | cipher_functions.so | function |
+| my_camellia192_encrypt |   0 | cipher_functions.so | function |
+| my_camellia192_decrypt |   0 | cipher_functions.so | function |
+| my_camellia256_encrypt |   0 | cipher_functions.so | function |
+| my_camellia256_decrypt |   0 | cipher_functions.so | function |
+| my_twofish128_encrypt  |   0 | cipher_functions.so | function |
+| my_twofish_decrypt     |   0 | cipher_functions.so | function |
+| my_twofish_encrypt     |   0 | cipher_functions.so | function |
+| my_cast5_decrypt       |   0 | cipher_functions.so | function |
+| my_cast5_encrypt       |   0 | cipher_functions.so | function |
+| my_aes256_decrypt      |   0 | cipher_functions.so | function |
++------------------------+-----+---------------------+----------+
+35 rows in set (0.01 sec)
+
+
